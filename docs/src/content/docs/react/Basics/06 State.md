@@ -2,17 +2,48 @@
 title: State
 ---
 
-State is a fundamental concept in React that allows components to manage and respond to changes in data over time. This guide provides a comprehensive, beginner-friendly explanation of state, with code snippets and examples to help you understand how it works.
+State is a fundamental concept in React that allows components to manage and respond to changes in data over time.
 
-### 1. What is State?
+State is a powerful feature in React that allows components to manage dynamic data and respond to user interactions. Understanding how to use state in both class and functional components, update state based on previous state, and manage side effects with lifecycle methods and hooks is crucial for building interactive React applications.
+
+## 1. What is State?
 
 State is an object that holds data that can change over the lifetime of a component. Unlike props, which are read-only and passed down from parent to child, state is local to the component and can be updated within the component.
 
-### 2. Using State in Class Components
+## 2. Using State in Class Components
 
-In class components, state is initialized in the constructor and updated using the `setState` method.
+### 2.1 Initialising State
 
-#### Example:
+In class components, state is initialized using a constructor method
+
+```jsx
+import React, { Component } from "react";
+
+class Counter extends Component {
+  constructor(props) {
+    super(props);
+    // Initialize state
+    this.state = { count: 0 };
+  }
+
+  render() {
+    return (
+      <div>
+        <p>Count: {this.state.count}</p>
+        <button>Increment</button>
+      </div>
+    );
+  }
+}
+
+export default Counter;
+```
+
+### 2.2 Updating State
+
+To update the state, you use the `this.setState` method. This method schedules an update to the component's state object and tells React to re-render the component with the updated state.
+
+As a parameter to the `setState` method a new state object is passed with that includes the properties of the state that need to be updated with their updated values.
 
 ```jsx
 import React, { Component } from "react";
@@ -42,13 +73,60 @@ class Counter extends Component {
 export default Counter;
 ```
 
-**Explanation:**
+#### 2.2.1 Updating State Based on Previous State
 
-- The `Counter` class component initializes state with `count: 0` in the constructor.
-- The `increment` method updates the state using `setState`.
-- When the button is clicked, the `increment` method is called, updating the `count` state and causing the component to re-render with the new count.
+Below is the correct way to update state based on the previous state of the component.
 
-### 3. Using State in Functional Components with Hooks
+```jsx
+import React, { Component } from "react";
+
+class Counter extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      count: 0,
+    };
+  }
+
+  incrementTwice = () => {
+    this.setState((prevState) => ({ count: prevState.count + 1 }));
+    this.setState((prevState) => ({ count: prevState.count + 1 }));
+  };
+
+  render() {
+    return (
+      <div>
+        <p>Count: {this.state.count}</p>
+        <button onClick={this.incrementTwice}>Increment Twice</button>
+      </div>
+    );
+  }
+}
+
+export default Counter;
+```
+
+`prevState` or `prevCount`: The updater function receives the latest state (`prevState` or `prevCount`) at the time of the update, ensuring that each state change is based on the most recent state. Each `setState` or `setCount` call processes in the correct order with the correct state, ensuring consistent and expected state updates even when multiple updates are batched together.
+
+Using the functional form of state updates is crucial when the new state depends on the previous state. It ensures that your state updates are accurate and reliable, especially in asynchronous and batched environments that React uses for performance optimization.
+
+#### 2.2.2 Running Code After A State Update
+
+To execute code immediately after the state has been updated, you should use a callback function as a second parameter in the `setState` method. This is necessary because `setState` operates asynchronously. If you attempt to execute code right after calling `setState` without a callback, it may access stale state values, not the updated ones.
+
+```jsx
+// Method to increment the count
+increment = () => {
+  this.setState({ count: this.state.count + 1 }, () => {
+    // Code executed in the callback function
+    console.log(this.state.count);
+  });
+};
+```
+
+## 3. Using State in Functional Components
+
+### 3.1 Initializing State
 
 In functional components, the `useState` hook is used to add state. Hooks are a new addition in React 16.8 that allow you to use state and other React features without writing a class.
 
@@ -78,7 +156,60 @@ export default Counter;
 - The `useState` function takes the initial state as an argument (`0` in this case) and returns an array containing the current state and the function to update it.
 - When the button is clicked, the `setCount` function updates the `count` state, causing the component to re-render with the new count.
 
-### 4. Handling Multiple State Variables
+### 3.2 Updating State
+
+In React functional components, state is managed using the `useState` hook. The `useState` hook allows you to add state to functional components and provides a way to update this state.
+
+```jsx
+import React, { useState } from "react";
+
+function Counter() {
+  const [count, setCount] = useState(0); // Initializing state with a value of 0
+
+  const increment = () => {
+    setCount(count + 1); // Updating state
+  };
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={increment}>Increment</button>
+    </div>
+  );
+}
+
+export default Counter;
+```
+
+To update state, you call the state updater function returned by `useState` (in this case, `setCount`). You can pass either a new state value or a function that takes the previous state as an argument and returns the new state.
+
+#### 3.2.2 Updating State Based on Previous State
+
+Below is the correct way to update state based on the previous state of the component.
+
+```jsx
+import React, { useState } from "react";
+
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  const incrementTwice = () => {
+    setCount((prevCount) => prevCount + 1);
+    setCount((prevCount) => prevCount + 1);
+  };
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={incrementTwice}>Increment Twice</button>
+    </div>
+  );
+}
+
+export default Counter;
+```
+
+### 3.3 Handling Multiple State Variables
 
 You can manage multiple state variables by calling `useState` multiple times in a functional component.
 
@@ -122,7 +253,7 @@ export default UserInfo;
 - Input fields are used to update the state variables via the `onChange` event handlers.
 - The state variables are displayed in a paragraph element.
 
-### 5. Initial State and Lazy Initialization
+### 3.4 Initial State and Lazy Initialization
 
 The initial state in `useState` can be set directly or lazily. Lazy initialization is useful when computing the initial state is expensive.
 
@@ -158,148 +289,3 @@ export default Counter;
 **Explanation:**
 
 - The `useState` hook is called with a function (`computeInitialState`) that returns the initial state. This function is executed only once, making it efficient for expensive computations.
-
-### 6. Updating State Based on Previous State
-
-When updating state based on the previous state, use the functional form of `setState` in class components or the updater function in `useState` for functional components.
-
-#### Example with Class Components:
-
-```jsx
-import React, { Component } from "react";
-
-class Counter extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { count: 0 };
-  }
-
-  increment = () => {
-    this.setState((prevState) => ({ count: prevState.count + 1 }));
-  };
-
-  render() {
-    return (
-      <div>
-        <p>Count: {this.state.count}</p>
-        <button onClick={this.increment}>Increment</button>
-      </div>
-    );
-  }
-}
-
-export default Counter;
-```
-
-**Explanation:**
-
-- The `increment` method uses the functional form of `setState` to ensure it correctly updates the state based on the previous state.
-
-#### Example with Functional Components:
-
-```jsx
-import React, { useState } from "react";
-
-function Counter() {
-  const [count, setCount] = useState(0);
-
-  const increment = () => {
-    setCount((prevCount) => prevCount + 1);
-  };
-
-  return (
-    <div>
-      <p>Count: {count}</p>
-      <button onClick={increment}>Increment</button>
-    </div>
-  );
-}
-
-export default Counter;
-```
-
-**Explanation:**
-
-- The `increment` function uses the updater function in `setCount` to ensure it correctly updates the state based on the previous state.
-
-### 7. State and Lifecycle in Class Components
-
-State is often used with lifecycle methods in class components to perform actions when a component mounts, updates, or unmounts.
-
-#### Example:
-
-```jsx
-import React, { Component } from "react";
-
-class Clock extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { date: new Date() };
-  }
-
-  componentDidMount() {
-    this.timerID = setInterval(() => this.tick(), 1000);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.timerID);
-  }
-
-  tick = () => {
-    this.setState({ date: new Date() });
-  };
-
-  render() {
-    return (
-      <div>
-        <h1>Current time: {this.state.date.toLocaleTimeString()}</h1>
-      </div>
-    );
-  }
-}
-
-export default Clock;
-```
-
-**Explanation:**
-
-- The `Clock` component sets up a timer in `componentDidMount` and clears it in `componentWillUnmount`.
-- The `tick` method updates the `date` state every second, causing the component to re-render with the updated time.
-
-### 8. State in Functional Components with `useEffect`
-
-The `useEffect` hook lets you perform side effects in functional components, similar to lifecycle methods in class components.
-
-#### Example:
-
-```jsx
-import React, { useState, useEffect } from "react";
-
-function Clock() {
-  const [date, setDate] = useState(new Date());
-
-  useEffect(() => {
-    const timerID = setInterval(() => setDate(new Date()), 1000);
-
-    // Cleanup the interval on component unmount
-    return () => clearInterval(timerID);
-  }, []);
-
-  return (
-    <div>
-      <h1>Current time: {date.toLocaleTimeString()}</h1>
-    </div>
-  );
-}
-
-export default Clock;
-```
-
-**Explanation:**
-
-- The `useEffect` hook sets up the timer when the component mounts and cleans it up when the component unmounts.
-- The `setDate` function updates the `date` state every second, causing the component to re-render with the updated time.
-
-### Conclusion
-
-State is a powerful feature in React that allows components to manage dynamic data and respond to user interactions. Understanding how to use state in both class and functional components, update state based on previous state, and manage side effects with lifecycle methods and hooks is crucial for building interactive React applications. This guide provides a detailed overview of state, with examples to illustrate key concepts.

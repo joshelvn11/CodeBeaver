@@ -3,268 +3,231 @@ title: Components
 description: A guide to React Components
 ---
 
-React components are the foundational building blocks of a React application. They allow you to build reusable, self-contained pieces of the UI. This guide will cover everything you need to know about React components, including functional and class components, props, state, lifecycle methods, and event handling.
+## 1. What is a React Component?
 
-### 1. What is a Component?
+React components are the fundamental building blocks of any React application. They allow developers to break down complex UIs into simpler, reusable, and isolated pieces.
 
-A component in React is a JavaScript function or class that optionally accepts inputs (known as props) and returns a React element that describes how a section of the UI should appear.
+A React component is a self-contained piece of code that defines a part of a user interface. Think of components as Lego blocks; you can build complex structures by combining these small, reusable pieces.
 
-### 2. Types of Components
+## 2. Why Use Components?
 
-There are two main types of components in React:
+1. **Reusability**: Components can be reused across different parts of an application, reducing the amount of code you have to write and maintain.
+2. **Isolation**: Each component operates independently. Changes in one component don't directly affect others, making the application easier to debug and develop.
+3. **Composition**: Components can be combined to build complex UIs. A component can include other components as part of its output.
 
-- **Functional Components**
-- **Class Components**
+## 3. Component Basics
 
-### 3. Functional Components
+Every React component has two main parts:
 
-Functional components are simple JavaScript functions that accept props (properties) as an argument and return React elements. They are also known as stateless components.
+1. **Component Logic**: This part contains the JavaScript code that defines the component’s behavior and data.
+2. **Component View**: This part contains the JSX code that defines what the UI should look like.
 
-#### Example:
+Here’s a basic example of a React component:
 
 ```jsx
 import React from "react";
 
-function Welcome(props) {
+function Greeting() {
+  return <h1>Hello, world!</h1>;
+}
+
+export default Greeting;
+```
+
+**Explanation:**
+
+- `import React from 'react';`: This line imports the React library, which is necessary for creating React components.
+- `function Greeting() { ... }`: This defines a functional component named `Greeting`.
+- `return <h1>Hello, world!</h1>;`: This specifies the UI that the component renders, which is an `h1` element with the text "Hello, world!".
+- `export default Greeting;`: This exports the `Greeting` component so it can be used in other parts of the application.
+
+### 3.1 Types of Components
+
+There are two main types of React components:
+
+1. **Functional Components**: These are simpler and are written as JavaScript functions. They receive data through props and return JSX.
+2. **Class Components**: These are more feature-rich and are written as ES6 classes. They can manage their own state and have access to lifecycle methods.
+
+### 3.2 Rendering Components
+
+To render a component, you use the `ReactDOM.render` method. This method takes two arguments:
+
+1. The component to render.
+2. The DOM element where the component should be rendered.
+
+```jsx
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "./App";
+
+ReactDOM.render(<App />, document.getElementById("root"));
+```
+
+**Explanation:**
+
+- `App` is the root component of the application.
+- `ReactDOM.render` renders the `App` component into the DOM element with the id `root`.
+
+### 3.3 Writing & Storing Components
+
+Components are written in .js or .jsx files (or .ts / .tsx for TypeScript) within the `src` directory. It's common to organize components into subdirectories like src/components to keep the codebase manageable.
+
+Components are named using Pascal Case e.g `MyComponent.js`
+
+### 3.4 Using Components
+
+Components can be used by importing them and including them in the JSX of another component.
+
+```jsx
+import React from "react";
+// Import the component
+import Greeting from "./Greeting";
+
+function App() {
+  return (
+    // Include the component tag
+    <div>
+      <Greeting name="Alice" />
+      <Greeting name="Bob" />
+    </div>
+  );
+}
+
+export default App;
+```
+
+## 4. Functional Components
+
+Functional components are a fundamental aspect of React, and they provide a straightforward way to define components as functions. They are simpler and often easier to write and understand compared to class components, especially with the introduction of hooks in React 16.8.
+
+### 4.1 What is a Functional Component?
+
+A functional component in React is a plain JavaScript function that accepts props as an argument and returns a React element, which is typically described using JSX.
+
+### 4.2 Characteristics of Functional Components
+
+1. **Simplicity**: Functional components are simpler and shorter than class components. They are essentially JavaScript functions that take props and return JSX.
+2. **No `this` keyword**: Unlike class components, functional components do not use the `this` keyword.
+3. **Hooks**: Functional components can use hooks to manage state and side effects, making them as powerful as class components.
+
+### 4.3 Defining a Functional Component
+
+A functional component is defined as a JavaScript function. Here’s the basic syntax:
+
+```jsx
+import React from "react";
+
+function Greeting(props) {
   return <h1>Hello, {props.name}!</h1>;
 }
 
-export default Welcome;
+export default Greeting;
 ```
 
-**Explanation:** The `Welcome` component is a functional component that takes `props` and returns an `h1` element with a greeting message.
+**Explanation**
 
-### 4. Class Components
+- `import React from 'react';`: This line imports the React library, which is necessary for creating React components.
+- `function Greeting(props) { ... }`: This defines a functional component named `Greeting` that takes `props` as an argument.
+- `return <h1>Hello, {props.name}!</h1>;`: This specifies the UI that the component renders, which is an `h1` element with a greeting message.
+- `export default Greeting;`: This exports the `Greeting` component so it can be used in other parts of the application.
 
-Class components are more feature-rich than functional components. They can have their own state and lifecycle methods. Class components are created using ES6 classes.
+## 5. Class Components
 
-#### Example:
+Class components were the primary way to define components in React before the introduction of hooks in React 16.8. They are still widely used and provide a powerful way to manage state, lifecycle methods, and more complex logic within components. This guide provides a comprehensive, beginner-friendly explanation of class components.
+
+### 5.1 What is a Class Component?
+
+A class component in React is defined using an ES6 class that extends `React.Component`. Class components can hold and manage their own state, and they can define lifecycle methods to run code at specific times during the component's lifecycle.
+
+### 5.2 Characteristics of Class Components
+
+1. **State Management**: Class components can hold and manage their own state.
+2. **Lifecycle Methods**: They provide lifecycle methods that allow you to run code at different stages of the component’s lifecycle.
+3. **`this` Keyword**: Class components use the `this` keyword to access props, state, and methods.
+
+### 5.3 Defining a Class Component
+
+A class component is defined as an ES6 class that extends `React.Component`. Here’s the basic syntax:
 
 ```jsx
 import React, { Component } from "react";
 
-class Welcome extends Component {
+class Greeting extends Component {
   render() {
     return <h1>Hello, {this.props.name}!</h1>;
   }
 }
 
-export default Welcome;
+export default Greeting;
 ```
 
-**Explanation:** The `Welcome` component is a class component that extends `React.Component`. It uses the `render` method to return an `h1` element with a greeting message.
+**Explanation:**
 
-### 5. Props
+- `import React, { Component } from 'react';`: This line imports the React library and the `Component` class.
+- `class Greeting extends Component { ... }`: This defines a class component named `Greeting` that extends `React.Component`.
+- `render() { ... }`: Every class component must have a `render` method that returns JSX to describe the UI.
+- `export default Greeting;`: This exports the `Greeting` component so it can be used in other parts of the application.
 
-Props (short for properties) are read-only inputs passed to components. They allow you to pass data from a parent component to a child component.
+### 5.4 Conditional Rendering
 
-#### Example:
-
-```jsx
-import React from "react";
-import ReactDOM from "react-dom";
-
-function Welcome(props) {
-  return <h1>Hello, {props.name}!</h1>;
-}
-
-function App() {
-  return (
-    <div>
-      <Welcome name="Alice" />
-      <Welcome name="Bob" />
-      <Welcome name="Charlie" />
-    </div>
-  );
-}
-
-ReactDOM.render(<App />, document.getElementById("root"));
-```
-
-**Explanation:** The `App` component renders three `Welcome` components with different `name` props.
-
-### 6. State
-
-State is a built-in object that allows components to create and manage their own data. Unlike props, state is mutable and can be changed over time, usually in response to user actions.
-
-#### Using State in Class Components:
-
-```jsx
-import React, { Component } from "react";
-
-class Counter extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { count: 0 };
-  }
-
-  increment = () => {
-    this.setState({ count: this.state.count + 1 });
-  };
-
-  render() {
-    return (
-      <div>
-        <p>Count: {this.state.count}</p>
-        <button onClick={this.increment}>Increment</button>
-      </div>
-    );
-  }
-}
-
-export default Counter;
-```
-
-**Explanation:** The `Counter` class component has a state object with a `count` property. The `increment` method updates the state using `setState`.
-
-#### Using State in Functional Components with Hooks:
-
-```jsx
-import React, { useState } from "react";
-
-function Counter() {
-  const [count, setCount] = useState(0);
-
-  return (
-    <div>
-      <p>Count: {count}</p>
-      <button onClick={() => setCount(count + 1)}>Increment</button>
-    </div>
-  );
-}
-
-export default Counter;
-```
-
-**Explanation:** The `Counter` functional component uses the `useState` hook to manage the state. `useState` returns an array with two elements: the current state and a function to update it.
-
-### 7. Lifecycle Methods
-
-Lifecycle methods are special methods in class components that allow you to run code at specific times in the component’s lifecycle (e.g., when the component mounts or unmounts).
-
-#### Common Lifecycle Methods:
-
-- `componentDidMount`: Called after the component is mounted (inserted into the DOM).
-- `componentDidUpdate`: Called after the component updates.
-- `componentWillUnmount`: Called before the component unmounts (removed from the DOM).
+Class components can conditionally render elements using JavaScript conditional statements inside the `render` method.
 
 #### Example:
 
 ```jsx
 import React, { Component } from "react";
 
-class Clock extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { date: new Date() };
-  }
-
-  componentDidMount() {
-    this.timerID = setInterval(() => this.tick(), 1000);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.timerID);
-  }
-
-  tick() {
-    this.setState({ date: new Date() });
-  }
-
+class Greeting extends Component {
   render() {
+    const isLoggedIn = this.props.isLoggedIn;
     return (
       <div>
-        <h1>Hello, world!</h1>
-        <h2>It is {this.state.date.toLocaleTimeString()}.</h2>
+        {isLoggedIn ? <h1>Welcome back!</h1> : <h1>Please sign in.</h1>}
       </div>
     );
   }
 }
 
-export default Clock;
+export default Greeting;
 ```
 
-**Explanation:** The `Clock` component sets up a timer in `componentDidMount` and clears it in `componentWillUnmount`. The `tick` method updates the component’s state every second.
+**Explanation:**
 
-### 8. Handling Events
+- The `Greeting` component checks the `isLoggedIn` prop and conditionally renders a message based on its value.
 
-Handling events in React is similar to handling events in regular HTML. However, there are some syntactic differences.
+## 6. Functional vs Class Components
 
-#### Example:
+### 6.1 Overview
 
-```jsx
-import React from "react";
+**Functional Components**
 
-function Toggle() {
-  const [isToggleOn, setToggle] = React.useState(true);
+- **Definition**: Simple JavaScript functions that return JSX. They use hooks like `useState` and `useEffect` for state management and side effects.
+- **Advantages**:
+  - **Simplicity**: Easier to read and write, with less boilerplate.
+  - **Performance**: Generally more performant due to optimizations by React.
+  - **Hooks**: Enable powerful features like state and lifecycle management without classes.
+- **Usage**: Preferred for most cases due to their simplicity and the power of hooks.
 
-  function handleClick() {
-    setToggle(!isToggleOn);
-  }
+**Class Components**
 
-  return <button onClick={handleClick}>{isToggleOn ? "ON" : "OFF"}</button>;
-}
+- **Definition**: ES6 classes that extend `React.Component` and include a `render` method to return JSX. They manage state using `this.state` and lifecycle methods.
+- **Advantages**:
+  - **Lifecycle Methods**: Provides more granular control over component lifecycle (e.g., `componentDidMount`, `componentDidUpdate`).
+  - **Legacy Code**: Necessary for working with legacy React codebases that haven’t migrated to hooks.
+- **Usage**: Used when you need to leverage specific lifecycle methods not easily replicated with hooks, or when maintaining older codebases.
 
-export default Toggle;
-```
+### 6.2 When to Use Each
 
-**Explanation:** The `Toggle` component handles a button click event by toggling the state between `true` and `false`.
+**Functional Components**
 
-### 9. Composition
+- When building new components and applications.
+- When you want simpler, cleaner, and more maintainable code.
+- When leveraging hooks for state and lifecycle management.
 
-Composition is the practice of combining multiple components to create a more complex UI. This is one of React's most powerful features.
+**Class Components**
 
-#### Example:
+- When working on existing codebases that predominantly use class components.
+- When specific lifecycle methods are required that you find challenging to implement with hooks.
+- When needing advanced lifecycle control that’s more straightforward with classes (though rare with modern React).
 
-```jsx
-import React from "react";
-
-function Dialog(props) {
-  return (
-    <div className="dialog">
-      <h1>{props.title}</h1>
-      <p>{props.message}</p>
-    </div>
-  );
-}
-
-function App() {
-  return (
-    <div>
-      <Dialog title="Welcome" message="Thank you for visiting our site!" />
-      <Dialog title="Goodbye" message="Hope to see you again!" />
-    </div>
-  );
-}
-
-export default App;
-```
-
-**Explanation:** The `App` component uses the `Dialog` component twice with different props to display different messages.
-
-### 10. Using Fragments
-
-React Fragments allow you to group multiple elements without adding extra nodes to the DOM.
-
-#### Example:
-
-```jsx
-import React from "react";
-
-function App() {
-  return (
-    <>
-      <h1>Hello, world!</h1>
-      <p>This is a paragraph.</p>
-    </>
-  );
-}
-
-export default App;
-```
-
-**Explanation:** Fragments are useful when you need to return multiple elements from a component without adding extra DOM nodes.
-
-### Conclusion
-
-React components are the fundamental building blocks of a React application. Understanding the different types of components, how to manage state and props, handle events, use lifecycle methods, and compose components is crucial for building efficient and scalable React applications. This guide provides a high-level overview to help you get started with React components, with examples to illustrate key concepts.
+Functional components are generally recommended for most use cases due to their simplicity and the power of hooks, while class components are useful for legacy code or specific scenarios requiring fine-grained lifecycle management.
