@@ -1,5 +1,5 @@
 ---
-title: Setting Up the Development Environment for React
+title: Development Environment
 description: A guide to Setting Up the Development Environment for React
 ---
 
