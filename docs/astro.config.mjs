@@ -25,6 +25,10 @@ export default defineConfig({
           label: "React",
           autogenerate: { directory: "react" },
         },
+        {
+          label: "Django",
+          autogenerate: { directory: "django" },
+        },
       ],
     }),
   ],

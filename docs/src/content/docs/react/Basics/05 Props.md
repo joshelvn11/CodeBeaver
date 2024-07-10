@@ -246,3 +246,191 @@ export default Card;
 
 The `App` component uses the `Card` component and passes different nested content to each `Card` instance via the `children` prop.
 The `Card` component renders its `title` prop and any nested elements passed as `props.children`.
+
+## 4. Passing Methods As Props
+
+In React, passing methods as props allows parent components to communicate with child components. This is useful when you want a child component to trigger a change or an action in the parent component. Here's a detailed explanation of how to pass methods as props.
+
+### 4.1 Define a Method in the Parent Component
+
+First, define the method you want to pass down in the parent component. This method typically updates the state or handles some logic in the parent component.
+
+```jsx
+import React, { Component } from "react";
+import ChildComponent from "./ChildComponent";
+
+class ParentComponent extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: "Initial data",
+    };
+    this.updateData = this.updateData.bind(this);
+  }
+
+  updateData(newData) {
+    this.setState({ data: newData });
+  }
+
+  render() {
+    return (
+      <div>
+        <h1>Parent Component</h1>
+        <p>Data: {this.state.data}</p>
+        <ChildComponent updateData={this.updateData} />
+      </div>
+    );
+  }
+}
+
+export default ParentComponent;
+```
+
+### 4.2 Pass the Method as a Prop to the Child Component
+
+In the parent component's `render` method, pass the method as a prop to the child component.
+
+```jsx
+<ChildComponent updateData={this.updateData} />
+```
+
+### 4.3 Call the Method in the Child Component
+
+In the child component, you can call the method passed as a prop using `this.props.methodName` for class components or `props.methodName` for functional components.
+
+**Class Component Example:**
+
+```jsx
+import React, { Component } from "react";
+
+class ChildComponent extends Component {
+  handleClick = () => {
+    this.props.updateData("Data updated by child");
+  };
+
+  render() {
+    return (
+      <div>
+        <h2>Child Component</h2>
+        <button onClick={this.handleClick}>Update Data</button>
+      </div>
+    );
+  }
+}
+
+export default ChildComponent;
+```
+
+**Functional Component Example:**
+
+```jsx
+import React from "react";
+
+function ChildComponent(props) {
+  const handleClick = () => {
+    props.updateData("Data updated by child");
+  };
+
+  return (
+    <div>
+      <h2>Child Component</h2>
+      <button onClick={handleClick}>Update Data</button>
+    </div>
+  );
+}
+
+export default ChildComponent;
+```
+
+### 4.4 Example of the Complete Flow
+
+**`ParentComponent.js`:**
+
+```jsx
+import React, { Component } from "react";
+import ChildComponent from "./ChildComponent";
+
+class ParentComponent extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: "Initial data",
+    };
+    this.updateData = this.updateData.bind(this);
+  }
+
+  updateData(newData) {
+    this.setState({ data: newData });
+  }
+
+  render() {
+    return (
+      <div>
+        <h1>Parent Component</h1>
+        <p>Data: {this.state.data}</p>
+        <ChildComponent updateData={this.updateData} />
+      </div>
+    );
+  }
+}
+
+export default ParentComponent;
+```
+
+**`ChildComponent.js` (Class Component):**
+
+```jsx
+import React, { Component } from "react";
+
+class ChildComponent extends Component {
+  handleClick = () => {
+    this.props.updateData("Data updated by child");
+  };
+
+  render() {
+    return (
+      <div>
+        <h2>Child Component</h2>
+        <button onClick={this.handleClick}>Update Data</button>
+      </div>
+    );
+  }
+}
+
+export default ChildComponent;
+```
+
+**`ChildComponent.js` (Functional Component):**
+
+```jsx
+import React from "react";
+
+function ChildComponent(props) {
+  const handleClick = () => {
+    props.updateData("Data updated by child");
+  };
+
+  return (
+    <div>
+      <h2>Child Component</h2>
+      <button onClick={handleClick}>Update Data</button>
+    </div>
+  );
+}
+
+export default ChildComponent;
+```
+
+### 4.5 Key Points
+
+- **Method Definition**: Define the method in the parent component that you want to pass to the child.
+- **Passing Method as Prop**: Pass the method to the child component via props in the parent component's render method.
+- **Calling Method in Child**: Call the method in the child component using `this.props.methodName` for class components or `props.methodName` for functional components.
+
+### 4.6 Benefits
+
+- **Communication**: Facilitates communication between parent and child components.
+- **State Management**: Allows child components to trigger state changes in the parent component.
+- **Reusability**: Methods can be passed to multiple child components, promoting reusability.
+
+By passing methods as props, you can maintain a clear flow of data and control between your React components, making your application more modular and manageable.
